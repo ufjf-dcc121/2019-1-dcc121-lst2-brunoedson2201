@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Questão 03</title>
+    <style>
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            font: 30px normal Arial;
+        }
+
+        p#pessoa {
+            font: 20px normal sans-serif;
+            text-decoration: underline;
+        }
+
+        label#dados {
+            font: 18px normal;
+        }
+
+        ul {
+            font: 17px normal;
+        }
+    </style>
+</head>
+<h1>Lista de Excursão:</h1>
+
+<body>
+    <form name="excursao">
+        <label id="dados">Nome:<input type="text" name="nome" required placeholder="Digite o nome"></label><br>
+        <label id="dados">Idade:<input type="number" name="idade" required placeholder="Digite a idade"></label><br>
+        <input type="submit">
+    </form>
+    <p id="pessoa">Adulto:</p>
+    <ul></ul>
+    <p id="pessoa">Estudante:</p>
+    <ul></ul>
+    <script>
+        var estudante = [];
+        var adulto = [];
+        var listaAdulto = document.getElementsByTagName("ul")[0];
+        var listaEstudante = document.getElementsByTagName("ul")[1];
+        document.forms.excursao.addEventListener("submit", lista);
+        function lista(e) {
+            e.preventDefault();
+            var nome = document.forms.excursao.nome.value;
+            var idade = document.forms.excursao.idade.value;
+            var convidado = { 'n': nome, 'i': idade };
+
+            criaLi = document.createElement("li");
+            criaLi.textContent = convidado.n + " - " + idade + " anos.";
+            if (idade < 18) {
+                estudante.push(convidado);
+                listaEstudante.appendChild(criaLi);
+            } else {
+                adulto.push(convidado);
+                listaAdulto.appendChild(criaLi);
+            }
+            document.forms.excursao.reset();
+            document.forms.excursao.nome.focus();
+        }
+    </script>
+</body>
+
+</html>
