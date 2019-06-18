@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Questão 01</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Lista de Itens.</h1>
+
+    <form name="formLista">
+        <div>
+            <label>
+                Quantidade: <input type="number" name="quantidade" id="quantidade"><br>
+                Item: <input type="text" name="item" id="item">
+            </label>
+        </div>
+    </form>
+
+    <div>
+        <button id="adicionar">Adicionar</button>
+        <button id="limpar" type="reset">Apagar Lista</button>
+    </div>
+    <ul style="font: normal 15px Arial; " id="lista"></ul>
+
+    <script>
+        var formLista = document.forms.formLista;
+        var quantidade = document.getElementById("quantidade");
+        var item = document.getElementById("item");
+        var adiciona = document.getElementById("adicionar");
+        var limpar = document.getElementById("limpar");
+        var lista = document.getElementById("lista");
+
+        adiciona.addEventListener("click", function adicionaNaLista() {
+            var elemento = document.createElement("li");
+            elemento.textContent = Number(quantidade.value) + " - " + item.value;
+            lista.appendChild(elemento);
+            formLista.reset();
+
+        })
+        limpar.addEventListener("click", function limpaLista() {
+            lista.removeChild(lista.lastChild);
+            formLista.reset();
+        })
+    </script>
+
+</body>
+
+</html>
