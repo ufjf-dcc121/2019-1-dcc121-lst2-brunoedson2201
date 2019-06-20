@@ -3,63 +3,146 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Questão 03</title>
+    <title>Excursão</title>
     <style>
-        h1 {
+        h1#titulo {
+            font: normal 30px Arial;
             text-align: center;
             text-decoration: underline;
-            font: 30px normal Arial;
         }
-
         p#pessoa {
-            font: 20px normal sans-serif;
+            font: bolder 18px sans-serif;
             text-decoration: underline;
         }
-
-        label#dados {
-            font: 18px normal;
+        label{
+            font: normal 14px Arial;
+            text-decoration: underline;
         }
-
-        ul {
-            font: 17px normal;
+        ul#adultos{
+            font: normal 15px Arial;
+        }
+        ul#estudantes{
+            font: normal 15px Arial;
         }
     </style>
 </head>
-<h1>Lista de Excursão:</h1>
 
 <body>
+    <h1 id="titulo">Participantes de Excursão:</h1>
     <form name="excursao">
-        <label id="dados">Nome:<input type="text" name="nome" required placeholder="Digite o nome"></label><br>
-        <label id="dados">Idade:<input type="number" name="idade" required placeholder="Digite a idade"></label><br>
-        <input type="submit">
+        <table border="1">
+            <tr>
+                <td><label id="dados">Nome:<input class="dados" type="text" name="nome" placeholder="Digite o nome aqui"></label></td>
+            </tr>
+            <tr>
+                <td><label id="dados">Idade:<input class="dados" type="number" name="idade" placeholder="Digite a idade aqui"></label></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="Excluir" name="excluir">
+                    <input type="submit" value="Inscrever" name="adicionar">
+                </td>
+            </tr>
+        </table>
     </form>
-    <p id="pessoa">Adulto:</p>
-    <ul></ul>
-    <p id="pessoa">Estudante:</p>
-    <ul></ul>
-    <script>
-        var estudante = [];
-        var adulto = [];
-        var listaAdulto = document.getElementsByTagName("ul")[0];
-        var listaEstudante = document.getElementsByTagName("ul")[1];
-        document.forms.excursao.addEventListener("submit", lista);
-        function lista(e) {
-            e.preventDefault();
-            var nome = document.forms.excursao.nome.value;
-            var idade = document.forms.excursao.idade.value;
-            var convidado = { 'n': nome, 'i': idade };
 
-            criaLi = document.createElement("li");
-            criaLi.textContent = convidado.n + " - " + idade + " anos.";
-            if (idade < 18) {
-                estudante.push(convidado);
-                listaEstudante.appendChild(criaLi);
-            } else {
-                adulto.push(convidado);
-                listaAdulto.appendChild(criaLi);
+    <div>
+        <table border="1">
+            <tr>
+                <td>
+                    <p id="pessoa">Adultos:</p>
+                    <ul id="adultos"></ul>
+                    <p id="pessoa">Estudantes:</p>
+                    <ul id="estudantes"></ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        var formExc = document.forms.excursao;
+        var listaAdultos = document.getElementById("adultos");
+        var listaEstudantes = document.getElementById("estudantes");
+        var botaoExc = document.forms.excursao.excluir;
+        var botaoAdd = document.forms.excursao.adicionar;
+        var atualizar = 0;
+        var idIl;
+
+        botaoExc.style.display = "none";
+        botaoExc.addEventListener("click", excluir);
+        formExc.addEventListener("submit", addLista);
+
+        function addLista(e) {
+            e.preventDefault();
+
+            if (!atualizar) {
+                var nomeI = document.forms.excursao.nome.value;
+                var idadeI = document.forms.excursao.idade.value;
+
+                if (idadeI > 17) {
+                    var novoLi = document.createElement("li");
+                    novoLi.innerHTML = "<span class='sNome'>" + nomeI + "</span> - <span class='sIdade'>" + idadeI + "</span> anos.";
+                    novoLi.addEventListener("click", editar);
+                    listaAdultos.appendChild(novoLi);
+                }
+                else {
+                    var novoLi = document.createElement("li");
+                    novoLi.innerHTML = "<span class='sNome'>" + nomeI + "</span> - <span class='sIdade'>" + idadeI + "</span> anos.";
+                    novoLi.addEventListener("click", editar);
+                    listaEstudantes.appendChild(novoLi);
+
+                }
+                formExc.reset();
+                formExc.nome.focus();
             }
-            document.forms.excursao.reset();
-            document.forms.excursao.nome.focus();
+            else {
+                var listaLi = idIl.getElementsByTagName("li");
+                for (var i = 0; i < listaLi.length; i++) {
+                    if (listaLi[i].style.color == "black") {
+                        var nomeI = document.forms.excursao.nome.value;
+                        var idadeI = document.forms.excursao.idade.value;
+                        listaLi[i].innerHTML = "<span class='sNome'>" + nomeI + "</span> - <span class='sIdade'>" + idadeI + "</span> anos.";
+                        document.forms.excursao.idade.min = "0";
+                        document.forms.excursao.idade.max = "";
+                        atualizar = 0;
+                        listaLi[i].style.color = "black";
+                        botaoExc.style.display = "none";
+                        botaoAdd.value = "Inscrever";
+                    }
+                }
+                formExc.reset();
+                formExc.nome.focus();
+            }
+        }
+
+        function editar() {
+            if (!atualizar) {
+                document.forms.excursao.nome.value = this.getElementsByClassName("sNome")[0].innerText;
+                document.forms.excursao.idade.value = Number(this.getElementsByClassName("sIdade")[0].innerText);
+                this.style.color = "black";
+                botaoExc.style.display = "inline";
+                idIl = this.parentElement;
+
+                if (idIl.id == "adultos")
+                    document.forms.excursao.idade.min = 18;
+                else
+                    document.forms.excursao.idade.max = 17;
+                    botaoAdd.value = "Atualizar";
+                    atualizar = 1;
+            }
+        }
+        function excluir() {
+            var listaLi = idIl.getElementsByTagName("li");
+            for (var i = 0; i < listaLi.length; i++) {
+                if (listaLi[i].style.color == "black") idIl.removeChild(listaLi[i]);
+            }
+            botaoExc.style.display = "none";
+            atualizar = 0;
+            document.forms.excursao.idade.min = "0";
+            document.forms.excursao.idade.max = "";
+            botaoAdd.value = "Inscrever";
+            formExc.reset();
+            formExc.nome.focus();
         }
     </script>
 </body>
